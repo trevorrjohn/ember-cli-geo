@@ -3,6 +3,7 @@ import Ember from 'ember';
 export default Ember.Service.extend(Ember.Evented, {
 
   currentLocation: null,
+  permissionState: 'unknown',
 
   getLocation(geoOptions) {
 
@@ -35,6 +36,19 @@ export default Ember.Service.extend(Ember.Evented, {
 
   geolocationDidFail: Ember.on('geolocationFail', function(reason, reject) {
     reject(reason);
-  })
+  }),
 
+  hasPermission() {
+    return navigator.permissions.query({ name: 'geolocation' })
+    .then(permissionState => {
+      this._updatePermissionState(permissionState);
+      permissionState.onChange = this._updatePermissionState.bind(this, permissionState);
+
+      return permissionState.state === 'granted';
+    });
+  },
+
+  _updatePermissionState(permissionState) {
+    this.set('permissionState', permissionState.state);
+  }
 });

@@ -38,9 +38,25 @@ describeModule(
         expect(service).to.have.property('currentLocation');
       });
 
+      it('can check geolocation permission', function() {
+        let service = this.subject();
+        expect(service).itself.to.respondTo('hasPermission');
+      });
+
+      it('has the current geolocation permission', function() {
+        let service = this.subject();
+        expect(service).to.have.property('permissionState');
+      });
     });
 
+    describe('has geolocation permission state when', function() {
+      it('has not been queried', function() {
+      });
+    }); 
+
     describe('determines geolocation and', function() {
+      function hasPermission() {
+      };
 
       let geoObject = {
         coords: {
@@ -99,10 +115,6 @@ describeModule(
           expect(service).to.have.property('currentLocation').that.is.null;
         });
       });
-
     });
-
-
-
   }
 );
